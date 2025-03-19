@@ -1,1 +1,2 @@
 #define MAX_LIST_SIZE 8
+#define MAX_CHAR_SIZE 20
