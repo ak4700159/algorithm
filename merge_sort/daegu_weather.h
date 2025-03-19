@@ -3,18 +3,22 @@
 
 #include "setting.h"
 #include <string>
+#include <cstring>
 using namespace std;
 
 typedef struct DaeguWeather{
-    string date;
+    char date[MAX_CHAR_SIZE];
     int temperature;
 } DaeguWeather;
 
-int setWeathers(DaeguWeather weathers[]);
-void weatherMergeSort(DaeguWeather weathers[], DaeguWeather result[], int len);
-void weatherMerge(DaeguWeather weathers[], DaeguWeather result[], int p, int q, int k);
-void mergeSort(DaeguWeather weathers[], DaeguWeather result[], int p, int q);
-void printList(DaeguWeather weathers[], int len);
-void copyResultToList(DaeguWeather weathers[], DaeguWeather result[], int p, int q);
+int setWeathers(DaeguWeather** weathers, DaeguWeather** result);
+void mergeSortWeather(DaeguWeather* weathers, DaeguWeather* result, int p, int q);
+void mergeWeather(DaeguWeather weathers, DaeguWeather* result, int p, int q);
+void printWeather(DaeguWeather* weathers);
+void copyResultToList(DaeguWeather* weathers, DaeguWeather* result, int p, int q);
+void test(DaeguWeather* weathers);
+void printTop3(DaeguWeather* weathers);
+DaeguWeather* makeNewDaeguWeather(string line);
+void saveWeather(DaeguWeather* weathers);
 
 #endif

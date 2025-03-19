@@ -1,22 +1,24 @@
 #include "setting.h"
 #include "merge.h"
 #include "daegu_weather.h"
-
 #include <iostream>
 #include <fstream>
 
 using namespace std;
 
-void solution1();
-void solution2();
+void solutionOne();
+void solutionTwo();
 
 int main() {
-    solution1();
-    solution2();
+    cout << "solution one start : " << endl;
+    solutionOne();
+    cout << "-----------------------------------" << endl;
+    cout << "solution two start : " << endl;
+    solutionTwo();
     return 0;
 }
 
-void solution1() {
+void solutionOne() {
     int list[MAX_LIST_SIZE] = {37, 10, 22, 30, 35, 13, 25, 24};
     int result[MAX_LIST_SIZE] = { 0 };
     int listLen = sizeof(list) / 4;
@@ -27,9 +29,11 @@ void solution1() {
     printList(result, resultLen);
 }
 
-void solution2() {
-    DaeguWeather* weathers;
-    int len = setWeathers(weathers) - 1;
-    printList(weathers, len);
+void solutionTwo() {
+    DaeguWeather** weathers = (DaeguWeather**)malloc(sizeof(DaeguWeather*));
+    DaeguWeather** result = (DaeguWeather**)malloc(sizeof(DaeguWeather*));
+    int len = setWeathers(weathers, result);
+    mergeSortWeather(weathers[0], result[0], 0, len-1);
+    printTop3(result[0]);
+    saveWeather(result[0]);
 }
-
