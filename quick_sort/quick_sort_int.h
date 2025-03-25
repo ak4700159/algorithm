@@ -1,14 +1,42 @@
-#include "quick_sort.h"
+#ifndef __QUICK_INT_H__
+#define __QUICK_INT_H__
+
 #include <iostream>
 #include <stdlib.h>
+#include <fstream>
 #include <time.h>
+#include "setting.h"
 using namespace std;
 
+class QuickSort{
+private:
+    // 피봇 선택 카운터
+    int count;
+    int len;
+    int *arr;
+    int *result;
+
+public:
+    QuickSort(int);
+    ~QuickSort();
+    void exchange(int, int);
+    void exec2WayPartitioning(int, int, int);
+    void exec3WayPartitioning(int, int);
+
+    int selectRandomPivot(int, int);
+    int selectMedianPivot(int, int);
+    void printResult();
+    void readFile();
+    void saveFile();
+};
+
+// {6, 2, 2, 2,  2, 2, 2, 2, 2, 2, 2, 2}
+// {6, 3, 11, 9,  12, 2, 8, 15, 18, 10, 7, 14}
 QuickSort::QuickSort(int len) {
     this->len = len;
     count = 0;
-    arr = new int[len] {6, 3, 11, 9,  12, 2, 8, 15, 18, 10, 7, 14};
-    result = new int[len] {6, 3, 11, 9,  12, 2, 8, 15, 18, 10, 7, 14};
+    arr = new int[len];
+    result = new int[len];
 }
 
 QuickSort::~QuickSort() {
@@ -18,7 +46,7 @@ QuickSort::~QuickSort() {
 
 // [p, q] => 피벗선정
 // 피벗의 왼쪽에 피봇보다 큰값이 오른쪽엔 작은값이 와야된다.
-void QuickSort::exec(int p, int q, int type){
+void QuickSort::exec2WayPartitioning(int p, int q, int type){
     if((q - p) <= 1) {
         if(arr[p] > arr[q] && (q-p) == 1) {
             exchange(p, q);
@@ -28,7 +56,7 @@ void QuickSort::exec(int p, int q, int type){
     }
 
     // 피봇 선정
-    int newPivotIdx = type == RANDOM ? selectRandomPivot(p, q) : selectMedianPivot(p, q);
+    int newPivotIdx = ((type == RANDOM) ? selectRandomPivot(p, q) : selectMedianPivot(p, q));
     if(p < q) {
         exchange(p, newPivotIdx);
         newPivotIdx = p;
@@ -66,9 +94,39 @@ void QuickSort::exec(int p, int q, int type){
                 break;
             }
         }
-        this->exec(p, newPivotIdx - 1, type);
-        this->exec(newPivotIdx + 1, q, type);
+        exec2WayPartitioning(p, newPivotIdx - 1, type);
+        exec2WayPartitioning(newPivotIdx + 1, q, type);
     }
+}
+
+void QuickSort::exec3WayPartitioning(int p, int q){
+    if((q - p) <= 1) {
+        if(arr[p] > arr[q] && (q-p) == 1) {
+            exchange(p, q);
+            return;
+        }
+        return;
+    }
+
+    int pivotValue = arr[p];
+    int leftDuplicatedIdx = p;
+    int rightDuplicatedIdx = q;
+    int i = p;
+    count++;
+    while(i <= rightDuplicatedIdx) {
+        if (arr[i] < pivotValue) {
+            exchange(i, leftDuplicatedIdx);
+            leftDuplicatedIdx++;
+            i++;
+        } else if (arr[i] > pivotValue) {
+            exchange(i, rightDuplicatedIdx);
+            rightDuplicatedIdx--;
+        } else {
+            i++;
+        }
+    }
+    exec3WayPartitioning(p, leftDuplicatedIdx - 1);
+    exec3WayPartitioning(rightDuplicatedIdx + 1, q);
 }
 
 int QuickSort::selectRandomPivot(int p, int q){
@@ -90,13 +148,18 @@ int QuickSort::selectMedianPivot(int p, int q){
         exchange(start, middle);
         if(arr[middle] > arr[end]){
             exchange(middle, end);
+            if(arr[start] > arr[middle]){
+                exchange(start, middle);
+            }
         }
     }
     else if(arr[start] > arr[end]) {
         exchange(start, end);
-        if(arr[start] > arr[middle]) {
-            exchange(start, middle);
+        if(arr[middle] > arr[end]) {
+            exchange(middle, end);
         }
+    } else if(arr[middle] > arr[end]) {
+        exchange(middle, end);
     }
     return middle;
 }
@@ -118,25 +181,16 @@ void QuickSort::exchange(int p, int q) {
     arr[q] = result[q];
 }
 
-
-void readFile() {
-    ofstream file("./daegu_weather_2024_output.txt");
-
-    file.close();
-}
-
-int getLines() {
-    int len = 0;
-    ofstream file("./daegu_weather_2024_output.txt");
-
-
-    file.close();
-    return len;
-}
-
 void QuickSort::saveFile() {
     ifstream file("./daegu_weather_2024_output.txt");
 
     file.close();
-
 }
+
+void QuickSort::readFile() {
+    ofstream file("./daegu_weather_2024_output.txt");
+
+    file.close();
+}
+
+#endif

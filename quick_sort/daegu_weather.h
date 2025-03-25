@@ -3,6 +3,8 @@
 
 #include <cstring>
 #include <iostream>
+#include <cstdio>
+#include "setting.h"
 using namespace std;
 
 class DaeguWeather{
@@ -10,13 +12,16 @@ public:
     int temp;
     char* date;
 public:
+    DaeguWeather() {}
     DaeguWeather(int temp, char* date) {
         this->temp = temp;
         strcpy(this->date, date);
     }
 
-    void print() {
-        cout << "[temp:" << temp << "]/[" << date << "]";
+    char* toString() {
+        char buf[CHAR_SIZE];
+        sprintf("[temp:%d]/[date:%s]", buf, temp, date);
+        return buf;
     }
 };
 
