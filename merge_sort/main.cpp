@@ -10,9 +10,9 @@ void solutionOne();
 void solutionTwo();
 
 int main() {
-    cout << "solution one start : " << endl;
-    solutionOne();
-    cout << "-----------------------------------" << endl;
+    // cout << "solution one start : " << endl;
+    // solutionOne();
+    // cout << "-----------------------------------" << endl;
     cout << "solution two start : " << endl;
     solutionTwo();
     return 0;
@@ -35,5 +35,5 @@ void solutionTwo() {
     int len = setWeathers(weathers, result);
     mergeSortWeather(weathers[0], result[0], 0, len-1);
     printTop3(result[0]);
-    saveWeather(result[0]);
+    // saveWeather(result[0]);
 }

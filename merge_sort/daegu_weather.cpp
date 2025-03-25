@@ -54,7 +54,7 @@ void test(DaeguWeather* weathers){
 
 void printTop3(DaeguWeather* weathers){
     for(int i = 0; i < 3; i++) {
-        cout << "[TOP" << i << "] [" << weathers[i].date << "|" << weathers[i].temperature << "]" << endl;
+        cout << "[TOP" << i + 1 << "] [" << weathers[i].date << "|" << weathers[i].temperature << "]" << endl;
     }
 }
 

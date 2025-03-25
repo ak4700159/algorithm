@@ -19,23 +19,17 @@ QuickSort::~QuickSort() {
 // [p, q] => 피벗선정
 // 피벗의 왼쪽에 피봇보다 큰값이 오른쪽엔 작은값이 와야된다.
 void QuickSort::exec(int p, int q, int type){
-    // cout << "[DEBUG] ---------------------------- [START]" << endl;
-    // cout << "[INFO] start : " << p << " / end : " << q << endl;
     if((q - p) <= 1) {
         if(arr[p] > arr[q] && (q-p) == 1) {
             exchange(p, q);
-            // cout << "[DEBUG] ---------------------------- [END]" << endl << endl;
             return;
         }
-        // cout << "[DEBUG] ---------------------------- [END]" << endl << endl;
         return;
     }
 
     // 피봇 선정
     int newPivotIdx = type == RANDOM ? selectRandomPivot(p, q) : selectMedianPivot(p, q);
     if(p < q) {
-        // cout << "[INFO] newPivot index : " << newPivotIdx << " / value : " << arr[newPivotIdx] <<endl;  
-        // printResult();
         exchange(p, newPivotIdx);
         newPivotIdx = p;
         count++;
@@ -44,11 +38,8 @@ void QuickSort::exec(int p, int q, int type){
         int rightIdx = type == RANDOM ? q : q - 1;
         int lastChangeLeftIdx = p + 1; 
         while(true) {
-            // cout << "-------------------------------------" << endl;
-            // printResult();
             while(arr[newPivotIdx] > arr[leftIdx] && leftIdx < rightIdx) leftIdx++;
             while(arr[newPivotIdx] < arr[rightIdx] && leftIdx < rightIdx) rightIdx--;
-            // cout << "[INFO] find left : " << arr[leftIdx] << " / right : " << arr[rightIdx] << endl;
             if((leftIdx < rightIdx) && (arr[newPivotIdx] < arr[leftIdx]) && (arr[newPivotIdx] > arr[rightIdx])) {
                 exchange(leftIdx, rightIdx);
                 lastChangeLeftIdx = leftIdx;
@@ -60,7 +51,6 @@ void QuickSort::exec(int p, int q, int type){
                 // 탐색하지 못한 경우, 피봇이랑 교체할 가장 작은 값을 찾아야된다.
                 // 중요한 건 결국 피벗을 기준으로 왼쪽엔 피봇보다 작은값, 오른쪽엔 큰값이 배치되어야 한다.
                 if(rightIdx == leftIdx) {
-                    // cout << "[INFO] wrost case" << endl;
                     int min = lastChangeLeftIdx;
                     for(int i = lastChangeLeftIdx; i <= leftIdx; i++){
                         if(arr[i] < arr[newPivotIdx]) min = i;
@@ -70,16 +60,12 @@ void QuickSort::exec(int p, int q, int type){
                     newPivotIdx = min;
                 }
                 else {
-                    // cout << "[INFO] best case " << endl;
                     exchange(lastChangeLeftIdx, newPivotIdx);
                     newPivotIdx = lastChangeLeftIdx;
                 }
                 break;
             }
         }
-        // printResult();
-        // cout << "[INFO] pivotIdx : " << newPivotIdx << endl;
-        // cout << "[DEBUG] ---------------------------- [END]" << endl << endl;
         this->exec(p, newPivotIdx - 1, type);
         this->exec(newPivotIdx + 1, q, type);
     }
@@ -89,7 +75,6 @@ int QuickSort::selectRandomPivot(int p, int q){
     srand(time(NULL));
     int random =rand() % (q - p + 1) + p; 
     count++;
-    cout << "[INFO] " << random << endl;
     return random;
 }
 
@@ -98,17 +83,20 @@ int QuickSort::selectMedianPivot(int p, int q){
     int start = p;
     int middle = (p + q) / 2;
     int end = q;
+    count++;
 
+    // 3개 요소에 대해 정렬
     if(arr[start] > arr[middle]){
-        // start <-> middle 교환 
+        exchange(start, middle);
         if(arr[middle] > arr[end]){
-            // middle <-> end 교환 
-        } 
-        else if(arr[start] > arr[end]) {
-            // start <-> end 교환
+            exchange(middle, end);
         }
-    } else if(arr[start] > arr[end]) {
-        // start <-> end 교환
+    }
+    else if(arr[start] > arr[end]) {
+        exchange(start, end);
+        if(arr[start] > arr[middle]) {
+            exchange(start, middle);
+        }
     }
     return middle;
 }
@@ -119,7 +107,8 @@ void QuickSort::printResult() {
         if(i % 5 == 0) cout << endl;
         cout << "[" << result[i] << "] -> ";
     }
-    cout << "[END]" << endl << endl;
+    cout << "[END]" << endl;
+    cout << "[PIVOT COUNT] : " << count << endl << endl;
 }
 
 void QuickSort::exchange(int p, int q) {
