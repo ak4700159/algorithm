@@ -10,7 +10,7 @@ using namespace std;
 class DaeguWeather{
 public:
     int temp;
-    char* date;
+    char date[CHAR_SIZE];
 public:
     DaeguWeather() {}
     DaeguWeather(int temp, char* date) {
@@ -20,9 +20,12 @@ public:
 
     char* toString() {
         char buf[CHAR_SIZE];
-        sprintf("[temp:%d]/[date:%s]", buf, temp, date);
-        return buf;
+        sprintf(buf, "[temp:%d]/[date:%s]", temp, date);
+
+        char* buf2;
+        strcpy(buf2, buf);
+        return buf2;
     }
 };
 
-#endif
+#endif 

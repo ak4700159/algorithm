@@ -1,14 +1,14 @@
 #ifndef __QUICK_INT_H__
 #define __QUICK_INT_H__
 
-#include <iostream>
-#include <stdlib.h>
-#include <fstream>
 #include <time.h>
+#include <stdlib.h>
+#include <iostream>
+#include <fstream>
 #include "setting.h"
 using namespace std;
 
-class QuickSort{
+class QuickSortInt{
 private:
     // 피봇 선택 카운터
     int count;
@@ -17,8 +17,8 @@ private:
     int *result;
 
 public:
-    QuickSort(int);
-    ~QuickSort();
+    QuickSortInt(int);
+    ~QuickSortInt();
     void exchange(int, int);
     void exec2WayPartitioning(int, int, int);
     void exec3WayPartitioning(int, int);
@@ -30,23 +30,23 @@ public:
     void saveFile();
 };
 
-// {6, 2, 2, 2,  2, 2, 2, 2, 2, 2, 2, 2}
+// {6, 2, 2, 2,  6, 6, 2, 2, 2, 2, 2, 2}
 // {6, 3, 11, 9,  12, 2, 8, 15, 18, 10, 7, 14}
-QuickSort::QuickSort(int len) {
+QuickSortInt::QuickSortInt(int len) {
     this->len = len;
     count = 0;
-    arr = new int[len];
-    result = new int[len];
+    arr = new int[len] {6, 3, 11, 9,  12, 2, 8, 15, 18, 10, 7, 14};
+    result = new int[len] {6, 3, 11, 9,  12, 2, 8, 15, 18, 10, 7, 14};
 }
 
-QuickSort::~QuickSort() {
+QuickSortInt::~QuickSortInt() {
     delete []arr;
     delete []result;
 }
 
 // [p, q] => 피벗선정
 // 피벗의 왼쪽에 피봇보다 큰값이 오른쪽엔 작은값이 와야된다.
-void QuickSort::exec2WayPartitioning(int p, int q, int type){
+void QuickSortInt::exec2WayPartitioning(int p, int q, int type){
     if((q - p) <= 1) {
         if(arr[p] > arr[q] && (q-p) == 1) {
             exchange(p, q);
@@ -56,7 +56,12 @@ void QuickSort::exec2WayPartitioning(int p, int q, int type){
     }
 
     // 피봇 선정
-    int newPivotIdx = ((type == RANDOM) ? selectRandomPivot(p, q) : selectMedianPivot(p, q));
+    int newPivotIdx;
+    switch (type) {
+        case RANDOM: newPivotIdx = selectRandomPivot(p, q); break;
+        case MID:    newPivotIdx = (p + q) / 2; break;
+        case MEDIAN: newPivotIdx = selectMedianPivot(p, q); break;
+    }
     if(p < q) {
         exchange(p, newPivotIdx);
         newPivotIdx = p;
@@ -66,9 +71,9 @@ void QuickSort::exec2WayPartitioning(int p, int q, int type){
         int rightIdx = type == RANDOM ? q : q - 1;
         int lastChangeLeftIdx = p + 1; 
         while(true) {
-            while(arr[newPivotIdx] > arr[leftIdx] && leftIdx < rightIdx) leftIdx++;
-            while(arr[newPivotIdx] < arr[rightIdx] && leftIdx < rightIdx) rightIdx--;
-            if((leftIdx < rightIdx) && (arr[newPivotIdx] < arr[leftIdx]) && (arr[newPivotIdx] > arr[rightIdx])) {
+            while(arr[newPivotIdx] > arr[leftIdx] && leftIdx <= rightIdx) leftIdx++;
+            while(arr[newPivotIdx] <= arr[rightIdx] && leftIdx > rightIdx) rightIdx--;
+            if(leftIdx < rightIdx) {
                 exchange(leftIdx, rightIdx);
                 lastChangeLeftIdx = leftIdx;
                 leftIdx++; rightIdx--;
@@ -79,13 +84,13 @@ void QuickSort::exec2WayPartitioning(int p, int q, int type){
                 // 탐색하지 못한 경우, 피봇이랑 교체할 가장 작은 값을 찾아야된다.
                 // 중요한 건 결국 피벗을 기준으로 왼쪽엔 피봇보다 작은값, 오른쪽엔 큰값이 배치되어야 한다.
                 if(rightIdx == leftIdx) {
-                    int min = lastChangeLeftIdx;
+                    int minIdx = lastChangeLeftIdx;
                     for(int i = lastChangeLeftIdx; i <= leftIdx; i++){
-                        if(arr[i] < arr[newPivotIdx]) min = i;
+                        if(arr[i] < arr[newPivotIdx]) minIdx = i;
                     }
-                    if(arr[newPivotIdx] < arr[min]) break;
-                    exchange(min, newPivotIdx);
-                    newPivotIdx = min;
+                    if(arr[newPivotIdx] < arr[minIdx]) break;
+                    exchange(minIdx, newPivotIdx);
+                    newPivotIdx = minIdx;
                 }
                 else {
                     exchange(lastChangeLeftIdx, newPivotIdx);
@@ -99,7 +104,7 @@ void QuickSort::exec2WayPartitioning(int p, int q, int type){
     }
 }
 
-void QuickSort::exec3WayPartitioning(int p, int q){
+void QuickSortInt::exec3WayPartitioning(int p, int q){
     if((q - p) <= 1) {
         if(arr[p] > arr[q] && (q-p) == 1) {
             exchange(p, q);
@@ -129,7 +134,7 @@ void QuickSort::exec3WayPartitioning(int p, int q){
     exec3WayPartitioning(rightDuplicatedIdx + 1, q);
 }
 
-int QuickSort::selectRandomPivot(int p, int q){
+int QuickSortInt::selectRandomPivot(int p, int q){
     srand(time(NULL));
     int random =rand() % (q - p + 1) + p; 
     count++;
@@ -137,7 +142,7 @@ int QuickSort::selectRandomPivot(int p, int q){
 }
 
 // 최소 요소가 3개 이상일 때 실행된다.
-int QuickSort::selectMedianPivot(int p, int q){
+int QuickSortInt::selectMedianPivot(int p, int q){
     int start = p;
     int middle = (p + q) / 2;
     int end = q;
@@ -164,30 +169,28 @@ int QuickSort::selectMedianPivot(int p, int q){
     return middle;
 }
 
-void QuickSort::printResult() {
-    cout << "[START] ";
+void QuickSortInt::printResult() {
+    cout << "[PRINT START]";
     for(int i = 0; i < len; i++) {
-        if(i % 5 == 0) cout << endl;
-        cout << "[" << result[i] << "] -> ";
+        if( i % 7 == 0) cout << endl;
+        cout << "[" << result[i] << "]" << " -> " ;
     }
     cout << "[END]" << endl;
-    cout << "[PIVOT COUNT] : " << count << endl << endl;
+    cout << "[PIVOT COUNT] : " << count << endl;
 }
 
-void QuickSort::exchange(int p, int q) {
-    result[p] = arr[q];
-    result[q] = arr[p];
-    arr[p] = result[p];
-    arr[q] = result[q];
+void QuickSortInt::exchange(int p, int q) {
+    int temp = arr[p];
+    arr[p] = arr[q];
+    arr[q] = temp;
 }
 
-void QuickSort::saveFile() {
-    ifstream file("./daegu_weather_2024_output.txt");
+// void QuickSortInt::saveFile() {
+//     ifstream file("./daegu_weather_2024_output.txt");
+//     file.close();
+// }
 
-    file.close();
-}
-
-void QuickSort::readFile() {
+void QuickSortInt::readFile() {
     ofstream file("./daegu_weather_2024_output.txt");
 
     file.close();
