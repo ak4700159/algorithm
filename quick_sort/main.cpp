@@ -10,8 +10,8 @@ void sol3();
 
 int main() {
     sol1();
-    // sol2();
-    // sol3();
+    sol2();
+    sol3();
     return 0;
 }
 
@@ -31,10 +31,13 @@ void sol2() {
     QuickSortWeather* quickSort = new QuickSortWeather(len);
     quickSort->readFile();
     quickSort->exec2WayPartitioning(0, len-1, RANDOM);
+    // quickSort->printResult();
     int random = quickSort->getCount();
+    quickSort->initCount();
 
     quickSort->readFile();
     quickSort->exec2WayPartitioning(0, len-1, MEDIAN);
+    // quickSort->printResult();
     int median = quickSort->getCount();
 
     cout << "median : " << median << " / " << "random : " << random << endl; 

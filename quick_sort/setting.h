@@ -4,7 +4,7 @@
 #define RANDOM 1
 #define MEDIAN 2
 #define MID 3
-#define CHAR_SIZE 10
+#define CHAR_SIZE 20
 
 #include <fstream>
 using namespace std;
