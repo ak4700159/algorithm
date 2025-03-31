@@ -80,13 +80,7 @@ void QuickSortInt::exec2WayPartitioning(int p, int q, int type){
 }
 
 void QuickSortInt::exec3WayPartitioning(int p, int q){
-    if((q - p) <= 1) {
-        if(arr[p] > arr[q] && (q-p) == 1) {
-            exchange(p, q);
-            return;
-        }
-        return;
-    }
+    if (p >= q) return;
 
     int pivotValue = arr[p];
     int leftDuplicatedIdx = p;
