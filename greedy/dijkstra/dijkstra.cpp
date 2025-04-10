@@ -29,7 +29,6 @@ public:
     void searchShortestPath(int start)
     {
         d[start] = 0;
-
         for (int i = 0; i < n; i++)
         {
             int min = extractMin();
@@ -68,11 +67,10 @@ public:
                 minDist = d[i];
             }
         }
-
         return minIdx;
     }
 
-    // v = end
+    // end index ~~> start index 방향으로 진행
     void printPath(int v)
     {
         if (p[v] == -1)
