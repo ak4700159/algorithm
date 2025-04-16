@@ -50,6 +50,7 @@ public:
             {
                 u[p[selectedIdx]->elements[i]] = true;
             }
+            p[selectedIdx]->printSubnet(selectedIdx);
         }
     }
 
@@ -79,7 +80,8 @@ public:
 
     // 현재 있는 상황에서 탐욕적 선택 -> P 안에서 원소를 선택
     // v1. U와 가장 많이 겹치는 부분 집합 선택
-    // v2. 비용이 가장 적게 드는 부분 집합 선택(발생하는 비용 / 겹치는 원소의 수)
+    // v2. 비용이 가장 적게 드는 부분 집합 선택(발생하는 비용 / 겹치는 원소의 수) 
+    //          => 겹치는 요소 당 드는 비용이 최소가 되는 것을 선택
     int selectGreedy_v1()
     {
         // 적당히 큰 값으로 초기화 
@@ -106,30 +108,23 @@ public:
         {
             if(p[i]->selected || elementCount(i) == 0) continue;
             double newEfficiency = (double)p[i]->cost / elementCount(i);
-
             if(newEfficiency < efficiency)
             {
                 efficiency = newEfficiency;
                 efficientIdx = i;
             }
         }
+        
         return efficientIdx;
     }
 
+
+
     void printSubnets()
     {
-        cout << "total Subnet list:\n";
         for (int i = 0; i < POWER_SET_SIZE; i++)
         {
-            cout << "S" << i + 1 << " (cost: " << p[i]->cost << ", isSelected: "
-                 << (p[i]->selected ? "O" : "X") << ") : { ";
-            for (int j = 0; j < p[i]->size; j++)
-            {
-                cout << p[i]->elements[j] + 1; // 0-based → 1-based 출력
-                if (j < p[i]->size - 1)
-                    cout << ", ";
-            }
-            cout << " }" << endl;
+            p[i]->printSubnet(i);
         }
     }
 
@@ -139,22 +134,13 @@ public:
         {
             if (p[i]->selected)
             {
-                cout << "S" << i + 1 << " (cost: " << p[i]->cost << ", isSelected: "
-                     << (p[i]->selected ? "O" : "X") << ") : { ";
-                for (int j = 0; j < p[i]->size; j++)
-                {
-                    cout << p[i]->elements[j] + 1; // 0-based → 1-based 출력
-                    if (j < p[i]->size - 1)
-                        cout << ", ";
-                }
-                cout << " }" << endl;
+                p[i]->printSubnet(i);
             }
         }
     }
 
     ~SetCovering()
     {
-        // delete[] p;
         for (int i = 0; i < POWER_SET_SIZE; i++)
         {
             delete p[i];
