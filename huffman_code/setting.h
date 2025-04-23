@@ -10,4 +10,6 @@ const char* control[] = {
     "CAN", "EM",  "SUB", "ESC", "FS",  "GS",  "RS",  "US"
 };
 
+const int MAX_INT = 99999999;
+
 #endif
