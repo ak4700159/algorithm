@@ -3,6 +3,6 @@
 int main() {
     SetCovering solver;
     solver.exec();
-    // solver.printCombind();
+    solver.printCombind();
     return 0;
 }

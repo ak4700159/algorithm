@@ -11,6 +11,7 @@ int main(void)
     Kruskal kruskal = Kruskal(graph);
     // true == 반드시 첫번째 간선 포함
     kruskal.searchMST(true);
+    cout << endl << "[RESULT]------------------------------------" << endl;
     kruskal.printMST();
     return 0;
 }

@@ -50,7 +50,7 @@ public:
             {
                 u[p[selectedIdx]->elements[i]] = true;
             }
-            p[selectedIdx]->printSubnet(selectedIdx);
+            // p[selectedIdx]->print(selectedIdx);
         }
     }
 
@@ -114,27 +114,27 @@ public:
                 efficientIdx = i;
             }
         }
-        
         return efficientIdx;
     }
 
-
-
+    // 전체 부분 집합 조회 
     void printSubnets()
     {
         for (int i = 0; i < POWER_SET_SIZE; i++)
         {
-            p[i]->printSubnet(i);
+            p[i]->print(i);
         }
     }
 
+    // 선택된 부분 집합 조회 
     void printCombind()
     {
+        cout << "[INFO] selected subnet list" << endl;
         for (int i = 0; i < POWER_SET_SIZE; i++)
         {
             if (p[i]->selected)
             {
-                p[i]->printSubnet(i);
+                p[i]->print(i);
             }
         }
     }

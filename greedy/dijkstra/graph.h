@@ -6,7 +6,6 @@
 #include <ctime>
 #include <iomanip>
 #include <queue>
-#include "edge.h"
 
 using namespace std;
 
@@ -82,18 +81,23 @@ public:
         delete[] arr;
     }
 
-    int getEdges()
-    {
-        return edges;
-    }
-    int getVertices()
-    {
-        return n;
-    }
-
     void setConnectedGraph()
     {
-        bool isFirst = true;
+        // 테스트
+        // int staticArr[10][10] = {
+        //     {0, 0, 0, 0, 0, 0, 6, 0, 0, 14},
+        //     {0, 0, 1, 0, 0, 0, 0, 0, 0, 2},
+        //     {0, 1, 0, 0, 18, 0, 0, 15, 4, 0},
+        //     {0, 0, 0, 0, 0, 0, 0, 0, 0, 4},
+        //     {0, 0, 18, 0, 0, 0, 0, 0, 0, 0},
+        //     {0, 0, 0, 0, 0, 0, 0, 16, 0, 10},
+        //     {6, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        //     {0, 0, 15, 0, 0, 16, 0, 0, 0, 0},
+        //     {0, 0, 4, 0, 0, 0, 0, 0, 0, 0},
+        //     {14, 2, 0, 4, 0, 10, 0, 0, 0, 0}};
+        // for (int i = 0; i < n; i++)
+        //     for (int j = 0; j < n; j++)
+        //         arr[i][j] = staticArr[i][j];
         while (!isConnected())
         {
             int u = rand() % n;
@@ -101,18 +105,10 @@ public:
             if (u == v || arr[u][v] != 0)
                 continue;
 
-            int weight = rand() % 100 + 1;
+            int weight = rand() % 20 + 1;
             arr[u][v] = arr[v][u] = weight;
-            if (isFirst)
-            {
-                isFirst = false;
-            }
             edges++;
-            cout << edges << " random edge : (" << u << "," << v << "), (" << v << "," << u << "), weightt: " << weight << endl;
         }
-        cout << "Number of Vertices : " << n << endl;
-        cout << "Number of Edges : " << edges << endl;
-        // printGraph();
     }
 
     void printGraph()
@@ -140,7 +136,8 @@ public:
             }
             cout << endl;
         }
-        cout << endl;
+        cout << endl
+             << endl;
     }
 
     void addEdge(int v, int u, int w)
@@ -150,9 +147,17 @@ public:
         edges++;
     }
 
-    int getWeight(int v, int u)
+    int getWeight(int from, int to)
     {
-        return arr[u][v];
+        return arr[from][to];
+    }
+    int getEdges()
+    {
+        return edges;
+    }
+    int getVertices()
+    {
+        return n;
     }
 };
 

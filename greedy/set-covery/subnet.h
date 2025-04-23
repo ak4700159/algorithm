@@ -19,10 +19,9 @@ public:
         delete elements;
     }
 
-    void printSubnet(int idx) {
+    void print(int idx) {
         {
-            cout << "S" << idx + 1 << " (cost: " << cost << ", isSelected: "
-                 << (selected ? "O" : "X") << ") : { ";
+            cout << "S" << idx + 1 << " (cost: " << cost << " ) : { ";
             for (int j = 0; j <size; j++)
             {
                 cout << elements[j] + 1; // 0-based → 1-based 출력
