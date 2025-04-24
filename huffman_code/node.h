@@ -24,8 +24,16 @@ public:
     Node *right;
 
     void printNode() {
-        cout << symbol << "/" << frequcncy << endl; 
+        if (isprint(symbol))
+        {
+            cout << symbol << " / " << frequcncy << endl;
+        }
+        else
+        {
+            cout << getControlCharName(symbol) << " / " << frequcncy << endl;
+        }
     }
 };
+
 
 #endif

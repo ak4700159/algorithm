@@ -18,26 +18,26 @@ class Heap
 {
 private:
     int size;
-    Node *arr;
+    Node **arr;
 
 public:
     Heap() {}
     Heap(int n)
     {
         size = 0;
-        arr = new Node[n + 1];
+        arr = new Node*[n + 1];
         for (int i = 0; i < n; i++)
         {
-            arr[i] = Node();
+            arr[i] = new Node();
         }
     }
 
-    void insert(Node newNode)
+    void insert(Node* newNode)
     {
         arr[++size] = newNode;
         for (int i = size; i > 1; i /= 2)
         {
-            if (arr[i].frequcncy < arr[i / 2].frequcncy)
+            if (arr[i]->frequcncy < arr[i / 2]->frequcncy)
             {
                 swap(i, i / 2);
             }
@@ -48,11 +48,12 @@ public:
         }
     }
 
-    Node remove()
+    Node* remove()
     {
         // 비어있으면 return
-        if (size < 1) return Node();
-        Node remove = arr[1];
+        if (size < 1)
+            return nullptr;
+        Node* remove = arr[1];
         // 맨마지막에 있는 노드를 루트 노드로 선정한다.
         arr[1] = arr[size--];
         for (int i = 1; i * 2 <= size;)
@@ -60,12 +61,12 @@ public:
             int left = i * 2;
             int right = i * 2 + 1;
             int small = left;
-            if (right <= size && arr[right].frequcncy < arr[left].frequcncy)
+            if (right <= size && arr[right]->frequcncy < arr[left]->frequcncy)
             {
                 small = right;
             }
 
-            if (arr[small].frequcncy > arr[i].frequcncy)
+            if (arr[small]->frequcncy > arr[i]->frequcncy)
             {
                 break;
             }
@@ -78,21 +79,42 @@ public:
 
     void swap(int a1, int a2)
     {
-        Node temp = arr[a1];
+        Node* temp = arr[a1];
         arr[a1] = arr[a2];
         arr[a2] = temp;
     }
 
-    void printHeap() {
+    void printHeap()
+    {
         std::cout << "[INFO] Heap Contents\n";
-        for (int i = 1; i <= size; ++i) {
-            std::cout << "Index " << i << ": ";
-            arr[i].printNode();
+        for (int i = 1; i <= size; ++i)
+        {
+            std::cout << "[IDX] " << i << ": ";
+            arr[i]->printNode();
         }
     }
 
-    int getSize() const {
+    // 일단 작성 나중에 쓸 일이 있을 것으로 보임.
+    int getSize() const
+    {
         return size;
+    }
+
+    // Heap이 제대로 만들어졌는지 검증하는 함수
+    bool validateMinHeap(int idx = 1)
+    {
+        if (idx > size)
+            return true;
+
+        int left = idx * 2;
+        int right = idx * 2 + 1;
+
+        if (left <= size && arr[idx]->frequcncy > arr[left]->frequcncy)
+            return false;
+        if (right <= size && arr[idx]->frequcncy > arr[right]->frequcncy)
+            return false;
+
+        return validateMinHeap(left) && validateMinHeap(right);
     }
 };
 
