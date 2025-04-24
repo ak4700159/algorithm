@@ -9,10 +9,23 @@
 6. 압축전과 후의 비트수를 계싼하여 압축률(%)을 계산하시오.
 */
 
+/*
+                                [---- 정리 ----]
+WindowsOS에서 개행문자(\r\n)로 인해 원본 파일과 비교해 용량 차이가 존재(개행문자를 \n로 처리하기 때문)
+Linux, MacOS에서 sample.txt 파일을 생성해 인코딩, 디코딩을 실행해야됨
+encoded file format : [file length][serialized tree][encoded content]
+*/
+
+
 int main()
 {
     HuffmanCode code = HuffmanCode();
+    code.encode();
+    cout << "[INFO] compression rate" << code.getCompressionRate("sample.txt", "sample.enc") << "%" << endl;
     code.decode();
-    code.compareFile();
+    if (code.compareFile())
+    {
+        cout << "[INFO] decoding success!" << endl;
+    }
     return 0;
 }
