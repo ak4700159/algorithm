@@ -5,30 +5,34 @@
 
 using namespace std;
 
-void execDijkstra();
-void execFloyd();
+clock_t execDijkstra();
+clock_t execFloyd();
 
 int main(void)
 {
-    execDijkstra();
-    execFloyd();
+    clock_t dijkstraTime = execDijkstra();
+    clock_t floydTime = execFloyd();
+    // 총 걸린 시간
+    cout << "[INFO] dijkstraTime = " << dijkstraTime << "ms" << endl;
+    cout << "[INFO] floydTime = " << floydTime << "ms" << endl;
     return 0;
 }
 
-void execDijkstra()
+clock_t execDijkstra()
 {
-    clock_t startTime = clock();
+    clock_t totalTime = 0;
     // 정점의 개수를 10~20개까지 1씩 증가
     for (int i = 10; i <= 20; i++)
     {
-        cout << "[INFO] execDijkstra() START" << endl;
         Graph graph = Graph(i);
         graph.setConnectedGraph();
+        clock_t startTime = clock();
+        cout << "[INFO] execDijkstra() START" << endl;
         Dijkstra dijkstra = Dijkstra(graph.getVertices(), &graph);
         // 각 정점에 대한 shortest path 구하기
         for (int n = 0; n < graph.getVertices(); n++)
-        { 
-            cout << "[INFO] vertices=" << i+1 << " shortest path about " << n + 1 << "th vertex" << endl;
+        {
+            cout << "[INFO] vertices=" << i << " shortest path about " << n + 1 << "th vertex" << endl;
             dijkstra.searchShortestPath(n);
             // 시작점으로부터 모든 정점에 대한 경로 출력 -> [n -> j 최단 경로]
             for (int j = 0; j < graph.getVertices(); j++)
@@ -37,42 +41,54 @@ void execDijkstra()
                 {
                     dijkstra.printPath(j);
                     cout << endl;
-                }    
+                }
             }
             dijkstra.reset();
         }
-        cout << endl << endl;
+        clock_t endTime = clock();
+        clock_t elapsedTime = endTime - startTime;
+        totalTime += elapsedTime;
+        cout << "[INFO] vertices=" << i << " / total elapsed time " << elapsedTime << "ms" << endl << endl;
     }
-    clock_t endTime = clock();
-    clock_t elapsedTime = endTime - startTime;
-    cout << "total elapsed time " << elapsedTime << "ms" << endl;
+    cout << endl << endl;
+    return totalTime;
 }
 
-void execFloyd()
+clock_t execFloyd()
 {
-    // for (int i = 10; i <= 20; i++)
-    // {
-    //     cout << "[INFO] execFloyd() START" << endl;
-    //     Graph graph = Graph(i);
-    //     graph.setConnectedGraph();
-    //     clock_t startTime = clock();
-    //     for (int i = 0; i < graph.getVertices(); i++)
-    //     { 
-    //         cout << "[INFO] vertices=" << i+1 << " shortest path about " << i + 1 << "th vertex" << endl;
-    //         for (int j = 0; j < graph.getVertices(); j++)
-    //         {
-    //             if (i != j)
-    //             {
-    //                 cout << endl;
-    //             }    
+    clock_t totalTime = 0;
+    // 정점의 개수를 10~20개까지 1씩 증가
+    for (int i = 10; i <= 20; i++)
+    {
+        Graph graph = Graph(i);
+        graph.setConnectedGraph();
+        clock_t startTime = clock();
+        cout << "[INFO] execFloyd() START" << endl;
+        Folyd floyd = Folyd(&graph);
 
-    //         }
-    //     }
-    //     clock_t endTime = clock();
-    //     clock_t elapsedTime = endTime - startTime;
-    //     cout << "total elapsed time " << elapsedTime << "ms" << endl;
-    //     cout << endl << endl << endl;
-    // }
+        // Floyd 알고리즘 수행 및 matrix 완성
+        floyd.searchShortestPaths();
+
+        // 각 정점에 대한 shortest path 구하기
+        for (int n = 0; n < graph.getVertices(); n++)
+        {
+            cout << "[INFO] vertices=" << i << " shortest path about " << n + 1 << "th vertex" << endl;
+            // 시작점으로부터 모든 정점에 대한 경로 출력 -> [n -> j 최단 경로]
+            for (int j = 0; j < graph.getVertices(); j++)
+            {
+                if (n != j)
+                {
+                    floyd.printPath(n, j);
+                }
+            }
+        }
+        clock_t endTime = clock();
+        clock_t elapsedTime = endTime - startTime;
+        totalTime += elapsedTime;
+        cout << "[INFO] vertices=" << i << " / total elapsed time " << elapsedTime << "ms" << endl << endl;
+    }
+    cout << endl << endl;
+    return totalTime;
 }
 
 /*

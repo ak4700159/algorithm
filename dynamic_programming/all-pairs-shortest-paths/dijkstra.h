@@ -1,8 +1,6 @@
 #ifndef __DIJKSTRA_H__
 #define __DIJKSTRA_H__
 
-#define INT_MAX 9999999
-
 #include "graph.h"
 #include <iostream>
 
@@ -15,10 +13,10 @@ private:
     int *d;        // 노드까지 거리
     bool *visited; // 노드 방문 여부
     int *p;        // 이전에 방문한 노드가 무엇인지
-    Graph* graph;
+    Graph *graph;
 
 public:
-    Dijkstra(int n, Graph* graph) : n(n), graph(graph)
+    Dijkstra(int n, Graph *graph) : n(n), graph(graph)
     {
         d = new int[n];
         visited = new bool[n];
@@ -49,7 +47,6 @@ public:
                 break;
             visited[min] = true;
             // 경로 업데이트
-            // cout << "[INFO] shortest node select : " << min << endl;
             for (int v = 0; v < n; v++)
             {
                 // 1. 방문하지 않은 정점
@@ -61,16 +58,9 @@ public:
                     // 경로 변경 (최소로)
                     p[v] = min;
                     d[v] = d[min] + weight;
-                    // cout << "[INFO] path update! {" << v << "} : p[]=" << p[v] << "/d[]=" << d[v] << endl;
-                }
-                else
-                {
-                    // cout << "[INFO] path update fail {" << v << "}" << endl;
                 }
             }
         }
-        // printPrevious();
-        // printDistance();
     }
 
     // 1. 인접한 노드 중
@@ -91,7 +81,8 @@ public:
         return minIdx;
     }
 
-    void reset() {
+    void reset()
+    {
         for (int i = 0; i < n; i++)
         {
             d[i] = INT_MAX;
@@ -106,11 +97,11 @@ public:
     {
         if (p[v] == -1)
         {
-            cout << v+1;
+            cout << v + 1;
             return 0;
         }
         int cost = printPath(p[v]);
-        cout << " -> " << v+1;
+        cout << " -> " << v + 1;
         return cost + graph->getWeight(v, p[v]);
     }
 

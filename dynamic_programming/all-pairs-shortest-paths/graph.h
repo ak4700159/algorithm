@@ -4,9 +4,9 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
+#include <climits>
 #include <iomanip>
 #include <queue>
-#include "edge.h"
 
 using namespace std;
 
@@ -16,62 +16,75 @@ private:
     int n;
     int edges;
     int **arr;
-
     // 연결형 그래프인지 확인
     bool isConnected()
     {
-        // 원래 그래프에서 BFS
-        bool *visited = new bool[n]{false};
-        if (!bfs(arr, 0, visited)) {
-            delete[] visited;
-            return false;
-        }
-        delete[] visited;
+        // 모든 노드가 연결되어 있는지 확인인
+        for (int start = 0; start < n; ++start)
+        {
+            // 정방향 BFS
+            if (!bfs(arr, start, n))
+                return false;
 
-        // 전치(transpose) 그래프 생성
-        int **transpose = new int*[n];
-        for (int i = 0; i < n; i++) {
-            transpose[i] = new int[n];
-            for (int j = 0; j < n; j++) {
-                transpose[i][j] = arr[j][i]; // 방향 뒤집기
+            // 전치 그래프 생성
+            int **transpose = new int *[n];
+            for (int i = 0; i < n; i++)
+            {
+                transpose[i] = new int[n];
+                for (int j = 0; j < n; j++)
+                {
+                    transpose[i][j] = arr[j][i];
+                }
             }
+
+            // 전치 BFS
+            if (!bfs(transpose, start, n))
+            {
+                for (int i = 0; i < n; i++)
+                    delete[] transpose[i];
+                delete[] transpose;
+                return false;
+            }
+
+            for (int i = 0; i < n; i++)
+                delete[] transpose[i];
+            delete[] transpose;
         }
 
-        // 전치 그래프에서 BFS
-        visited = new bool[n]{false};
-        bool result = bfs(transpose, 0, visited);
-
-        // 메모리 해제
-        for (int i = 0; i < n; i++)
-            delete[] transpose[i];
-        delete[] transpose;
-        delete[] visited;
-
-        return result;
+        return true;
     }
 
-    // 하나의 정점에 대해 모든 정점을 방문하는지 확인
-    bool bfs(int **matrix, int start, bool *visited)
+    bool bfs(int **matrix, int start, int size)
     {
+        bool *visited = new bool[size]{false};
         queue<int> q;
         q.push(start);
         visited[start] = true;
+
         while (!q.empty())
         {
             int cur = q.front();
             q.pop();
-            for (int i = 0; i < n; i++)
+            for (int i = 0; i < size; i++)
             {
-                if (matrix[cur][i] != 0 && !visited[i])
+                if (matrix[cur][i] != INT_MAX && !visited[i])
                 {
                     visited[i] = true;
                     q.push(i);
                 }
             }
         }
-        for (int i = 0; i < n; i++)
-            if (!visited[i]) return false;
 
+        for (int i = 0; i < size; i++)
+        {
+            if (!visited[i])
+            {
+                delete[] visited;
+                return false;
+            }
+        }
+
+        delete[] visited;
         return true;
     }
 
@@ -87,7 +100,7 @@ public:
             arr[i] = new int[n];
             for (int j = 0; j < n; j++)
             {
-                arr[i][j] = 0;
+                arr[i][j] = INT_MAX;
             }
         }
         srand(time(0));
@@ -101,10 +114,6 @@ public:
         delete[] arr;
     }
 
-    int getEdges()
-    {
-        return edges;
-    }
     int getVertices()
     {
         return n;
@@ -117,7 +126,7 @@ public:
         {
             int u = rand() % n;
             int v = rand() % n;
-            if (u == v || arr[u][v] != 0)
+            if (u == v || arr[u][v] != INT_MAX)
                 continue;
 
             int weight = rand() % 100 + 1;
@@ -125,8 +134,8 @@ public:
             edges++;
             // cout << edges << " random edge : (" << u << "," << v << "), weightt: " << weight << endl;
         }
-        cout << "Number of Vertices : " << n << endl;
-        cout << "Number of Edges : " << edges << endl;
+        // cout << "Number of Vertices : " << n << endl;
+        // cout << "Number of Edges : " << edges << endl;
         // printGraph();
     }
 
@@ -151,18 +160,14 @@ public:
             cout << setw(2) << i << " |";
             for (int j = 0; j < n; j++)
             {
-                cout << setw(3) << arr[i][j] << " ";
+                if (arr[i][j] == INT_MAX)
+                    cout << "INF ";
+                else
+                    cout << setw(3) << arr[i][j] << " ";
             }
             cout << endl;
         }
         cout << endl;
-    }
-
-    void addEdge(int v, int u, int w)
-    {
-        arr[u][v] = w;
-        arr[v][u] = w;
-        edges++;
     }
 
     int getWeight(int v, int u)
