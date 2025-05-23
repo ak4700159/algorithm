@@ -6,17 +6,27 @@
 */
 
 #include <iostream>
+#include <fstream>  // 추가
 #include "chained_matrix.h"
 
 using namespace std;
 
 int main(void) {
-    for(int i = 5; i <= 10; i++) {
-        ChainedMatrix chainedMatrix = ChainedMatrix(i);
+    ofstream outFile("matrix_vs_cost.csv");
+    outFile << "matrix_count,min_cost\n";
+    ChainedMatrix chainedMatrix = ChainedMatrix(5);
+    for(int i = 5; i <= 300; i++) {
         chainedMatrix.multiplication();
+        // chainedMatrix.printResult();
+        int result = chainedMatrix.getFinalSolution();
+        // chainedMatrix.printImplicitOrder();
         // chainedMatrix.printDimensions();
-        chainedMatrix.printResult();
-        chainedMatrix.printImplicitOrder();
+        // 메트릭스 개수와 최적해 간 연관성 확인 
+        cout << "(solution / matrix count) = (" << result << " / " << i  << ") : " << (double)result / i << endl;
+        outFile << i << "," << (double)result / i << "\n";
+        chainedMatrix.extendMatrix();
     }
+    outFile.close();
+    cout << "📁 CSV saved: matrix_vs_cost.csv\n";
     return 0;
 }
