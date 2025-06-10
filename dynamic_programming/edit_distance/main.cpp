@@ -40,6 +40,13 @@ void sol2() {
     cout << "user input : "; cin >> buffer;
     input = new char[strlen(buffer)];
     strcpy(input, buffer);
+
+    cout << "dictionary word : [ ";
+    for(int i = 0; i < 3; i++) {
+        cout << dictionary[i] << " ";
+    }
+    cout << "]" << endl;
+
     // edit distrance 알고리즘을 통해 어떤 문자와 가장 유사한지 확인
     int min = MAX_INT; char minWord[MAX_STR];
     for(int i = 0; i < 3; i++) {
